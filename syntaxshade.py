@@ -33,7 +33,7 @@ def highlight_keywords(event=None):
             start = text.index(f"1.0+{start_index}c")
             end = text.index(f"1.0+{end_index}c")
             text.tag_add("comment", start, end)
-    # for variable names
+    # variable names
     for match in re.finditer(r'\b([a-zA-Z_][a-zA-Z0-9_]*)\s*=', content):
         var_name = match.group(1)
         start = f"1.0+{match.start(1)}c"
@@ -51,6 +51,15 @@ def auto_indent(event):
 
     text.insert("insert", f"\n{indent}")
     return "break"
+
+def full_backspace(event):
+    cursor_index = text.index("insert")
+    line_start_index = text.index("insert linestart")
+    current_line = text.get(line_start_index, f"{line_start_index} + 4c")
+
+    if text.compare(cursor_index, "==", f"{line_start_index} + 4c") and current_line.startswith("    "):
+        text.delete(line_start_index, f"{line_start_index} + 4c")
+        return "break"
 
 def open_file():
     file_path = filedialog.askopenfilename(
@@ -89,7 +98,6 @@ def line_numbers(*i):
     for line in range(1, total_lines + 1):
 
         line_content = text.get(f"{line}.0", f"{line}.end")
-        
         wrapped_lines = len(line_content) // (text_width // char_width) + 1
 
         for _ in range(wrapped_lines):
@@ -101,7 +109,7 @@ def line_numbers(*i):
 
 root = tk.Tk()
 root.title('Syntax Shade')
-root.geometry('100x800')
+root.geometry('600x800')
 icon = tk.PhotoImage(file='syntaxlogo.png')
 root.iconphoto(False, icon)
 
@@ -131,6 +139,7 @@ def on_modified(event=None):
 text.bind("<<Modified>>", on_modified)
 text.bind("<ButtonRelease-1>", line_numbers)
 text.bind("<Return>", auto_indent)
+text.bind("<BackSpace>", full_backspace)
 
 menu = tk.Menu(root)
 root.config(menu=menu)
