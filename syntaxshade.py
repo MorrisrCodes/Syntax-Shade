@@ -19,20 +19,20 @@ def highlight_keywords(event=None):
             end = text.index(f"{start}+{len(word)}c")
             text.tag_add("keyword", start, end)
     # strings
-        for match in re.finditer(r'(\".*?(?<!\\)\"|\'.*?(?<!\\)\')'
+    for match in re.finditer(r'(\".*?(?<!\\)\"|\'.*?(?<!\\)\')'
 , content):
-            start_index = match.start()
-            end_index = match.end()
-            start = text.index(f"1.0+{start_index}c")
-            end = text.index(f"1.0+{end_index}c")
-            text.tag_add("string", start, end)
+        start_index = match.start()
+        end_index = match.end()
+        start = text.index(f"1.0+{start_index}c")
+        end = text.index(f"1.0+{end_index}c")
+        text.tag_add("string", start, end)
     # comments
-        for match in re.finditer(r'#.*', content):
-            start_index = match.start()
-            end_index = match.end()
-            start = text.index(f"1.0+{start_index}c")
-            end = text.index(f"1.0+{end_index}c")
-            text.tag_add("comment", start, end)
+    for match in re.finditer(r'#.*', content):
+        start_index = match.start()
+        end_index = match.end()
+        start = text.index(f"1.0+{start_index}c")
+        end = text.index(f"1.0+{end_index}c")
+        text.tag_add("comment", start, end)
     # variable names
     for match in re.finditer(r'\b([a-zA-Z_][a-zA-Z0-9_]*)\s*=', content):
         var_name = match.group(1)
@@ -64,7 +64,8 @@ def full_backspace(event):
 def open_file():
     file_path = filedialog.askopenfilename(
         title="Open File",
-        filetypes=[("Text Files", "*.txt"), ("Python Files", "*.py"), ("HTML Files", "*.html"), ("CSS Files", "*.css"), ("JavaScript Files", "*.js"), ("All Files", "*.*")]
+        filetypes=[("Text Files", "*.txt"), ("Python Files", "*.py"), ("HTML Files", "*.html"),
+                    ("CSS Files", "*.css"), ("JavaScript Files", "*.js"), ("All Files", "*.*")]
     )
     if file_path:
         with open(file_path, "r") as file:
@@ -157,3 +158,4 @@ scrollbar.config(command=text.yview)
 text.config(yscrollcommand=scrollbar.set)
 
 root.mainloop()
+
